@@ -1,3 +1,4 @@
+use crate::error::ConfigError;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

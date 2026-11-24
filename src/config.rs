@@ -54,8 +54,7 @@ impl ConfigManager {
     
     pub fn set_value(&self, key: &str, value: &str, file: Option<PathBuf>) -> Result<(), ConfigError> {
         let config_path = file.unwrap_or_else(|| {
-            directories::config_dir()
-                .unwrap_or_else(|| PathBuf::from("~"))
+            directories::ProjectDirs::from("org", "sigmaos", "sigmaos").map(|p| p.config_dir().to_path_buf()).unwrap_or_else(|| PathBuf::from("~/.config"))
                 .join("sigmaos")
                 .join("config.toml")
         });
@@ -72,8 +71,7 @@ impl ConfigManager {
     
     pub fn get_value(&self, key: &str, file: Option<PathBuf>) -> Result<String, ConfigError> {
         let config_path = file.unwrap_or_else(|| {
-            directories::config_dir()
-                .unwrap_or_else(|| PathBuf::from("~"))
+            directories::ProjectDirs::from("org", "sigmaos", "sigmaos").map(|p| p.config_dir().to_path_buf()).unwrap_or_else(|| PathBuf::from("~/.config"))
                 .join("sigmaos")
                 .join("config.toml")
         });

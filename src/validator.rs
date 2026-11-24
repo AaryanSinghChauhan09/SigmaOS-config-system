@@ -92,7 +92,7 @@ impl ConfigValidator {
             return Err(ConfigError::Validation(format!("Invalid power profile: {}", config.power_profile)));
         }
         
-        if config.screen_timeout < 0 || config.screen_timeout > 86400 {
+        if config.screen_timeout > 86400 {
             return Err(ConfigError::Validation("Screen timeout must be between 0 and 86400 seconds".to_string()));
         }
         
