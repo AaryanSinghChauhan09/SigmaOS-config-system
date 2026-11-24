@@ -1,0 +1,16 @@
+[component]
+name = "sigmaos-config-system"
+version = "0.1.0"
+description = "SigmaOS declarative configuration system"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/AaryanSinghChauhan09/SigmaOS-config-system"
+
+[dependencies]
+sigmaos-build-system = { path = "../SigmaOS-build-system", version = "0.1.0" }
+sigmaos-update-system = { path = "../SigmaOS-update-system", version = "0.1.0" }
+
+[features]
+default = ["toml", "json", "yaml"]
+toml = []
+json = []
+yaml = []
