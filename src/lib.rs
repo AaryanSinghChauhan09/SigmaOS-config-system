@@ -2,8 +2,8 @@
 
 pub mod config;
 pub mod error;
-pub mod schema;
 pub mod loader;
+pub mod schema;
 pub mod validator;
 
 pub use config::ConfigManager;

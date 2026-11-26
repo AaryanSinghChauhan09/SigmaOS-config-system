@@ -3,8 +3,8 @@ use std::path::PathBuf;
 
 mod config;
 mod error;
-mod schema;
 mod loader;
+mod schema;
 mod validator;
 
 use config::ConfigManager;
@@ -26,7 +26,7 @@ enum Commands {
         /// Configuration file path
         #[arg(short, long)]
         file: Option<PathBuf>,
-        
+
         /// Configuration directory
         #[arg(short, long, default_value = "~/.config/sigmaos")]
         config_dir: PathBuf,
@@ -71,10 +71,10 @@ enum Commands {
 
 fn main() -> Result<(), ConfigError> {
     env_logger::init();
-    
+
     let cli = Cli::parse();
     let config_manager = ConfigManager::new()?;
-    
+
     match cli.command {
         Commands::Load { file, config_dir } => {
             let config = config_manager.load_config(file, config_dir)?;
@@ -102,6 +102,6 @@ fn main() -> Result<(), ConfigError> {
             println!("{}", value);
         }
     }
-    
+
     Ok(())
 }

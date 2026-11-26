@@ -2,7 +2,7 @@ use crate::error::ConfigError;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Config {
     pub desktop: DesktopConfig,
     pub window_manager: WindowManagerConfig,
@@ -151,24 +151,6 @@ pub struct LoggingConfig {
     pub journal: bool,
 }
 
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            desktop: DesktopConfig::default(),
-            window_manager: WindowManagerConfig::default(),
-            terminal: TerminalConfig::default(),
-            shell: ShellConfig::default(),
-            network: NetworkConfig::default(),
-            power: PowerConfig::default(),
-            accessibility: AccessibilityConfig::default(),
-            performance: PerformanceConfig::default(),
-            security: SecurityConfig::default(),
-            updates: UpdateConfig::default(),
-            logging: LoggingConfig::default(),
-        }
-    }
-}
-
 impl Config {
     pub fn apply_defaults(&mut self) {
         // Apply default values for missing fields
@@ -185,49 +167,93 @@ impl Config {
             self.shell.type_ = "zsh".to_string();
         }
     }
-    
+
     pub fn set_value(&mut self, key: &str, value: &str) -> Result<(), ConfigError> {
         let parts: Vec<&str> = key.split('.').collect();
         if parts.len() < 2 {
             return Err(ConfigError::InvalidKey(key.to_string()));
         }
-        
+
         match (parts[0], parts[1]) {
             ("desktop", "theme") => self.desktop.theme = value.to_string(),
             ("desktop", "icon_theme") => self.desktop.icon_theme = value.to_string(),
             ("desktop", "font_family") => self.desktop.font_family = value.to_string(),
-            ("desktop", "font_size") => self.desktop.font_size = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
-            ("desktop", "transparency") => self.desktop.transparency = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
-            ("desktop", "animations") => self.desktop.animations = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
+            ("desktop", "font_size") => {
+                self.desktop.font_size = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
+            ("desktop", "transparency") => {
+                self.desktop.transparency = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
+            ("desktop", "animations") => {
+                self.desktop.animations = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
             ("window_manager", "type") => self.window_manager.type_ = value.to_string(),
             ("window_manager", "layout") => self.window_manager.layout = value.to_string(),
-            ("window_manager", "gaps") => self.window_manager.gaps = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
+            ("window_manager", "gaps") => {
+                self.window_manager.gaps = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
             ("terminal", "emulator") => self.terminal.emulator = value.to_string(),
             ("terminal", "font_family") => self.terminal.font_family = value.to_string(),
-            ("terminal", "font_size") => self.terminal.font_size = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
+            ("terminal", "font_size") => {
+                self.terminal.font_size = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
             ("shell", "type") => self.shell.type_ = value.to_string(),
             ("network", "hostname") => self.network.hostname = value.to_string(),
             ("network", "domain") => self.network.domain = value.to_string(),
             ("power", "power_profile") => self.power.power_profile = value.to_string(),
-            ("power", "screen_timeout") => self.power.screen_timeout = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
-            ("accessibility", "screen_reader") => self.accessibility.screen_reader = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
-            ("accessibility", "high_contrast") => self.accessibility.high_contrast = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
-            ("performance", "gpu_acceleration") => self.performance.gpu_acceleration = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
-            ("security", "selinux") => self.security.selinux = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
-            ("updates", "enabled") => self.updates.enabled = value.parse().map_err(|_| ConfigError::InvalidValue(value.to_string()))?,
+            ("power", "screen_timeout") => {
+                self.power.screen_timeout = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
+            ("accessibility", "screen_reader") => {
+                self.accessibility.screen_reader = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
+            ("accessibility", "high_contrast") => {
+                self.accessibility.high_contrast = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
+            ("performance", "gpu_acceleration") => {
+                self.performance.gpu_acceleration = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
+            ("security", "selinux") => {
+                self.security.selinux = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
+            ("updates", "enabled") => {
+                self.updates.enabled = value
+                    .parse()
+                    .map_err(|_| ConfigError::InvalidValue(value.to_string()))?
+            }
             ("logging", "level") => self.logging.level = value.to_string(),
             _ => return Err(ConfigError::InvalidKey(key.to_string())),
         }
-        
+
         Ok(())
     }
-    
+
     pub fn get_value(&self, key: &str) -> Result<String, ConfigError> {
         let parts: Vec<&str> = key.split('.').collect();
         if parts.len() < 2 {
             return Err(ConfigError::InvalidKey(key.to_string()));
         }
-        
+
         let value = match (parts[0], parts[1]) {
             ("desktop", "theme") => self.desktop.theme.clone(),
             ("desktop", "icon_theme") => self.desktop.icon_theme.clone(),
@@ -254,7 +280,7 @@ impl Config {
             ("logging", "level") => self.logging.level.clone(),
             _ => return Err(ConfigError::InvalidKey(key.to_string())),
         };
-        
+
         Ok(value)
     }
 }
@@ -312,7 +338,10 @@ impl Default for ShellConfig {
             history_size: 10000,
             auto_complete: true,
             syntax_highlighting: true,
-            plugins: vec!["zsh-autosuggestions".to_string(), "zsh-syntax-highlighting".to_string()],
+            plugins: vec![
+                "zsh-autosuggestions".to_string(),
+                "zsh-syntax-highlighting".to_string(),
+            ],
         }
     }
 }
