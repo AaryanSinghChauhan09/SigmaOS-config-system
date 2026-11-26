@@ -448,3 +448,41 @@ impl Default for LoggingConfig {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn defaults_produce_valid_config() {
+        let mut cfg = Config::default();
+        cfg.apply_defaults();
+        crate::validator::ConfigValidator::new()
+            .unwrap()
+            .validate(&cfg)
+            .unwrap();
+    }
+
+    #[test]
+    fn set_and_get_value_roundtrip() {
+        let mut cfg = Config::default();
+        cfg.set_value("desktop.theme", "omarchy").unwrap();
+        cfg.set_value("desktop.font_size", "14").unwrap();
+        assert_eq!(cfg.get_value("desktop.theme").unwrap(), "omarchy");
+        assert_eq!(cfg.get_value("desktop.font_size").unwrap(), "14");
+    }
+
+    #[test]
+    fn invalid_key_and_value_rejected() {
+        let mut cfg = Config::default();
+        assert!(matches!(
+            cfg.set_value("bogus.key", "x"),
+            Err(ConfigError::InvalidKey(_))
+        ));
+        assert!(matches!(
+            cfg.set_value("desktop.font_size", "abc"),
+            Err(ConfigError::InvalidValue(_))
+        ));
+        assert!(cfg.get_value("nope.key").is_err());
+    }
+}

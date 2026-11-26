@@ -206,3 +206,39 @@ impl ConfigValidator {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::schema::Config;
+
+    #[test]
+    fn default_config_validates() {
+        let mut cfg = Config::default();
+        cfg.apply_defaults();
+        ConfigValidator::new().unwrap().validate(&cfg).unwrap();
+    }
+
+    #[test]
+    fn out_of_range_values_rejected() {
+        let mut cfg = Config::default();
+        cfg.apply_defaults();
+        cfg.desktop.font_size = 0;
+        assert!(ConfigValidator::new().unwrap().validate(&cfg).is_err());
+        cfg.desktop.font_size = 12;
+        cfg.window_manager.gaps = 500;
+        assert!(ConfigValidator::new().unwrap().validate(&cfg).is_err());
+        cfg.window_manager.gaps = 10;
+        cfg.updates.check_interval = 60;
+        assert!(ConfigValidator::new().unwrap().validate(&cfg).is_err());
+    }
+
+    #[test]
+    fn security_requires_a_module() {
+        let mut cfg = Config::default();
+        cfg.apply_defaults();
+        cfg.security.selinux = false;
+        cfg.security.apparmor = false;
+        assert!(ConfigValidator::new().unwrap().validate(&cfg).is_err());
+    }
+}
