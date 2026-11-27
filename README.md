@@ -253,3 +253,13 @@ All errors are handled gracefully with detailed error messages:
 ## License
 
 GPL-3.0-or-later
+
+## See Also
+
+Related SigmaOS **general** repositories:
+
+- [SigmaOS-ISO](../SigmaOS-ISO/README.md) — Build the SigmaOS live ISO from a manifest
+- [SigmaOS-bottles](../SigmaOS-bottles/README.md) — Bottles
+- [SigmaOS-browser](../SigmaOS-browser/README.md) — Browser component for SigmaOS
+- [SigmaOS-build-system](../SigmaOS-build-system/README.md) — GitHub description is a placeholder; component scope remains unclassified.
+- [SigmaOS-genoffice](../SigmaOS-genoffice/README.md) — No GitHub description is set; component scope remains unclassified.
