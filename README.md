@@ -1,6 +1,6 @@
 # SigmaOS Config System
 
-SigmaOS declarative configuration system providing NixOS-like configuration management.
+SigmaOS declarative configuration system providing SigmaOS config system design.
 
 ## Features
 

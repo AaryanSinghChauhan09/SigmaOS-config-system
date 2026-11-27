@@ -700,9 +700,9 @@ mod tests {
     #[test]
     fn set_and_get_value_roundtrip() {
         let mut cfg = Config::default();
-        cfg.set_value("desktop.theme", "omarchy").unwrap();
+        cfg.set_value("desktop.theme", "sigmaos").unwrap();
         cfg.set_value("desktop.font_size", "14").unwrap();
-        assert_eq!(cfg.get_value("desktop.theme").unwrap(), "omarchy");
+        assert_eq!(cfg.get_value("desktop.theme").unwrap(), "sigmaos");
         assert_eq!(cfg.get_value("desktop.font_size").unwrap(), "14");
     }
 
